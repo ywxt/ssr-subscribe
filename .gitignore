@@ -80,6 +80,6 @@ fabric.properties
 out
 gen
 
-.gradle
+.gradle/
 build/
 
