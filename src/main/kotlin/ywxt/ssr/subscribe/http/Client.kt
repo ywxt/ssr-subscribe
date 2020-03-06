@@ -4,6 +4,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.ssr.SsrUrl
+import ywxt.ssr.subscribe.ssr.SsrUrlConvert
+import ywxt.ssr.subscribe.util.decodeBase64
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -29,8 +31,10 @@ class Client {
         return requireNotNull(body.use { it?.string() }) { throw HttpException("目标页面无法转换为文本") }
     }
 
-    suspend fun requestSsrUrls(url: URL) : List<SsrUrl> {
-
+    suspend fun requestSsrUrls(url: URL): List<SsrUrl> {
+        val bodyText = requestPlainText(url)
+        val ssrUrlsText = bodyText.decodeBase64(false).lineSequence()
+        return ssrUrlsText.map { SsrUrlConvert.from(it) }.toList()
     }
 
 }

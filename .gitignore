@@ -81,5 +81,5 @@ out
 gen
 
 .gradle
-build
+build/
 
