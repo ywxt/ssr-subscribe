@@ -23,7 +23,7 @@ object SsrUrlBaseConvert : Convert<SsrUrlBase, String> {
                 password = parts[5].decodeBase64()
             )
         } catch (_: Exception) {
-            throw ParseException("Ssr地址有误")
+            throw ParseException("SSR地址有误")
         }
     }
 

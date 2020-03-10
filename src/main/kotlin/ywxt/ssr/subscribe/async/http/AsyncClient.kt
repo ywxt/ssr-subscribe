@@ -1,4 +1,4 @@
-package ywxt.ssr.subscribe.http
+package ywxt.ssr.subscribe.async.http
 
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class Client {
+class AsyncClient {
     companion object {
 
         const val TIMEOUT = 3000L
@@ -37,21 +37,22 @@ class Client {
         return ssrUrlsText.map { SsrUrlConvert.from(it) }.toList()
     }
 
+    private suspend fun OkHttpClient.callAsync(request: Request): Response =
+        suspendCancellableCoroutine { cont ->
+            val call = newCall(request)
+            cont.invokeOnCancellation { if (!call.isCanceled()) call.cancel() }
+            call.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    cont.resumeWithException(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    cont.resume(response)
+                }
+            })
+        }
+
+
 }
 
-
-private suspend fun OkHttpClient.callAsync(request: Request): Response =
-    suspendCancellableCoroutine { cont ->
-        val call = newCall(request)
-        cont.invokeOnCancellation { if (!call.isCanceled()) call.cancel() }
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                cont.resumeWithException(e)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                cont.resume(response)
-            }
-        })
-    }
 
