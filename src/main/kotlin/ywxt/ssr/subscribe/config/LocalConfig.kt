@@ -8,13 +8,13 @@ data class LocalConfig(
     @JsonProperty("local_port")
     var localPort: Int = 1080,
     @JsonProperty("timeout")
-    var timeout: Int?,
+    var timeout: Int? = null,
     @JsonProperty("udp_timeout")
-    var udpTimeout: Int?,
+    var udpTimeout: Int? = null,
     @JsonProperty("udp_cache")
-    var udpCache: Int?,
+    var udpCache: Int? = null,
     @JsonProperty("fast_open")
-    var fastOpen: Boolean?,
+    var fastOpen: Boolean? = null,
     @JsonProperty("redirect")
-    var redirect: String?
+    var redirect: String? = null
 )

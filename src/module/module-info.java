@@ -7,4 +7,5 @@ module ywxt.ssr.subscribe {
     requires okhttp3;
     requires kotlinx.coroutines.core;
     requires com.fasterxml.jackson.databind;
+    requires info.picocli;
 }

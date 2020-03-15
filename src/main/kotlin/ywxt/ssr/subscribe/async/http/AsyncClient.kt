@@ -15,10 +15,7 @@ import kotlin.coroutines.resumeWithException
 class AsyncClient {
     companion object {
 
-        const val TIMEOUT = 3000L
-
         val httpClient = OkHttpClient.Builder()
-            .callTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
             .build()
     }
 

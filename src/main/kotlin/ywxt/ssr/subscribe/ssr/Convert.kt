@@ -59,16 +59,20 @@ object SsrUrlParamsConvert : Convert<SsrUrlParams, String> {
 object SsrUrlConvert : Convert<SsrUrl, String> {
     override fun from(value: String): SsrUrl {
         if (!value.startsWith("ssr://")) {
-            throw ParseException("非SSR地址")
+            throw ParseException("非SSR地址:${value}")
         }
         val couple = value.substring(6).split("/?", limit = 2)
         if (couple.size != 2) {
-            throw ParseException("SSR地址有误")
+            throw ParseException("SSR地址有误:${value}")
         }
-        return SsrUrl(
-            urlBase = SsrUrlBaseConvert.from(couple[0]),
-            urlParams = SsrUrlParamsConvert.from(couple[1])
-        )
+        try {
+            return SsrUrl(
+                urlBase = SsrUrlBaseConvert.from(couple[0]),
+                urlParams = SsrUrlParamsConvert.from(couple[1])
+            )
+        }catch (e:ParseException){
+            throw ParseException("SSR地址有误:${value}")
+        }
     }
 
     override fun to(type: SsrUrl): String = type.run {
