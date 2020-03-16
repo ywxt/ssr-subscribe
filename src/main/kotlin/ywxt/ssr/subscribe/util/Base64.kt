@@ -1,4 +1,6 @@
-package ywxt.ssr.subscribe.util
+@file:Suppress("PackageDirectoryMismatch")
+
+package ywxt.ssr.subscribe.util.base64
 
 import java.util.*
 

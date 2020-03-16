@@ -1,8 +1,8 @@
 package ywxt.ssr.subscribe.ssr
 
 import ywxt.ssr.subscribe.exception.ParseException
-import ywxt.ssr.subscribe.util.decodeBase64
-import ywxt.ssr.subscribe.util.encodeBase64
+import ywxt.ssr.subscribe.util.base64.decodeBase64
+import ywxt.ssr.subscribe.util.base64.encodeBase64
 import java.lang.Exception
 
 interface Convert<T, V> {

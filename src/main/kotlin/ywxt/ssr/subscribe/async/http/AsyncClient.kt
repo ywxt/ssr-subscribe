@@ -5,10 +5,9 @@ import okhttp3.*
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.ssr.SsrUrl
 import ywxt.ssr.subscribe.ssr.SsrUrlConvert
-import ywxt.ssr.subscribe.util.decodeBase64
+import ywxt.ssr.subscribe.util.base64.decodeBase64
 import java.io.IOException
 import java.net.URL
-import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -25,7 +24,7 @@ class AsyncClient {
             .get()
             .build()
         val body = httpClient.callAsync(request).body
-        return requireNotNull(body.use { it?.string() }) { throw HttpException("目标页面无法转换为文本") }
+        return body.use { it?.string() } ?: throw HttpException("目标页面无法转换为文本")
     }
 
     suspend fun requestSsrUrls(url: URL): List<SsrUrl> {

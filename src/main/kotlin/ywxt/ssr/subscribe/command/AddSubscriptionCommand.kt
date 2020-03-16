@@ -10,9 +10,11 @@ import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.config.SubscriptionConfig
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.exception.ParseException
-import ywxt.ssr.subscribe.util.eprintln
+import ywxt.ssr.subscribe.ssr.SsrUrl
 import java.net.MalformedURLException
 import java.net.URL
+import ywxt.ssr.subscribe.util.console.eprintln
+import ywxt.ssr.subscribe.util.console.printGroup
 
 @CommandLine.Command(name = "add")
 class AddSubscriptionCommand : Runnable {
@@ -40,6 +42,28 @@ class AddSubscriptionCommand : Runnable {
             eprintln("HTTP错误：${e.message}")
         } catch (e: TimeoutCancellationException) {
             eprintln("网络超时")
+        }
+    }
+
+    companion object {
+        private fun showDetail(url: String, urls: List<SsrUrl>) {
+            println("订阅地址：${url}")
+            println("服务器：")
+            val prettyServers = urls
+                .groupBy { it.urlParams.group }
+                .asSequence()
+                .map { group ->
+                    val key = if (group.key.isBlank()) "未命名" else group.key
+                    val value = group.value
+                        .map { url ->
+                            if (url.urlParams.remarks.isBlank()) "${url.urlBase.server}:${url.urlBase.port}"
+                            else "${url.urlParams.remarks} (${url.urlBase.server}:${url.urlBase.port})"
+                        }
+                    Pair(key, value)
+                }.associateBy({ it.first }, { it.second })
+            prettyServers.forEach {
+                printGroup(it.key, it.value)
+            }
         }
     }
 }
