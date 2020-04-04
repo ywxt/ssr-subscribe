@@ -1,9 +1,9 @@
 package ywxt.ssr.subscribe.command
 
-import picocli.CommandLine
+import com.github.ajalt.clikt.core.CliktCommand
 
-@CommandLine.Command(name = "switch")
-class SwitchServerCommand : Runnable {
+
+class SwitchServerCommand : CliktCommand(name = "switch") {
     override fun run() {
 
     }

@@ -6,31 +6,33 @@ import ywxt.ssr.subscribe.ssr.SsrUrl
 
 data class ServerConfig(
     @JsonProperty("server")
-    var server: String,
+    val server: String,
     @JsonProperty("server_port")
-    var port: Int,
+    val port: Int,
     @JsonProperty("protocol")
-    var protocol: String,
+    val protocol: String,
     @JsonProperty("method")
-    var method: String,
+    val method: String,
     @JsonProperty("obfs")
-    var obfs: String,
+    val obfs: String,
     @JsonProperty("password")
-    var password: String,
+    val password: String,
     @JsonProperty("obfs_param")
-    var obfsParam: String,
+    val obfsParam: String,
     @JsonProperty("proto_param")
-    var protoParam: String,
+    val protoParam: String,
     @JsonProperty("remarks")
-    var remarks: String,
+    val remarks: String,
     @JsonProperty("group")
-    var group: String,
+    val group: String,
+    @JsonProperty("source")
+    val source:String,
     //local config
     @JsonUnwrapped
     var localConfig: LocalConfig
 ) {
     companion object {
-        fun from(ssrUrl: SsrUrl, localConfig: LocalConfig): ServerConfig = ServerConfig(
+        fun from(ssrUrl: SsrUrl, source: String ,localConfig: LocalConfig): ServerConfig = ServerConfig(
             server = ssrUrl.urlBase.server,
             port = ssrUrl.urlBase.port,
             protocol = ssrUrl.urlBase.protocol,
@@ -41,6 +43,7 @@ data class ServerConfig(
             obfsParam = ssrUrl.urlParams.obfsParam,
             remarks = ssrUrl.urlParams.remarks,
             group = ssrUrl.urlParams.group,
+            source = source,
             localConfig = localConfig
         )
     }

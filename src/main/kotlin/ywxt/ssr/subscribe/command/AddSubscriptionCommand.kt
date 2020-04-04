@@ -1,13 +1,13 @@
 package ywxt.ssr.subscribe.command
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import picocli.CommandLine
 import ywxt.ssr.subscribe.async.http.AsyncClient
 import ywxt.ssr.subscribe.config.ConfigFile
 import ywxt.ssr.subscribe.config.ServerConfig
-import ywxt.ssr.subscribe.config.SubscriptionConfig
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.exception.ParseException
 import ywxt.ssr.subscribe.ssr.SsrUrl
@@ -18,10 +18,8 @@ import ywxt.ssr.subscribe.util.console.eprintln
 import ywxt.ssr.subscribe.util.console.printGroups
 import ywxt.ssr.subscribe.util.groups
 
-@CommandLine.Command(name = "add")
-class AddSubscriptionCommand : Runnable {
-    @CommandLine.Parameters
-    private lateinit var url: String
+class AddSubscriptionCommand : CliktCommand(name = "add") {
+    val url: String by argument()
     override fun run() {
         try {
             val httpUrl = URL(url)
@@ -34,10 +32,10 @@ class AddSubscriptionCommand : Runnable {
                 val confirmed = confirm("是否添加到订阅？")
                 if (!confirmed) return@runBlocking
                 val config = ConfigFile.load()
-                config.subscriptionConfig.add(SubscriptionConfig(
-                    url = url,
-                    servers = ssrUrls.map { ServerConfig.from(it, config.defaultLocalConfig) }
-                ))
+                ssrUrls.forEach {
+                    config.servers.add(ServerConfig.from(it, url, config.defaultLocalConfig))
+                }
+                config.sources.add(url)
                 config.save()
 
             }

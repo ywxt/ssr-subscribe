@@ -5,26 +5,28 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import ywxt.ssr.subscribe.async.file.AsyncFile
 import ywxt.ssr.subscribe.json.JSON_MAPPER
 import java.io.File
-import java.nio.file.Paths
 
 data class ConfigFile(
     @JsonProperty("defaultLocal")
     val defaultLocalConfig: LocalConfig,
-    @JsonProperty("subscription")
-    val subscriptionConfig: MutableList<SubscriptionConfig>
+    @JsonProperty("servers")
+    val servers: MutableList<ServerConfig>,
+    @JsonProperty("sources")
+    val sources: MutableList<String>
 ) {
     companion object {
         const val FILE_NAME = "setting.json"
         const val PATH = "~/.ssr-sub/"
         val DEFAULT_CONFIG = ConfigFile(
             defaultLocalConfig = LocalConfig(),
-            subscriptionConfig = mutableListOf()
+            servers = mutableListOf(),
+            sources = mutableListOf()
         )
 
         suspend fun load(file: String = PATH + FILE_NAME): ConfigFile =
             if (File(file).exists()) {
                 AsyncFile(file).use {
-                    JSON_MAPPER.readValue<ConfigFile>(it.read())
+                    JSON_MAPPER.readValue(it.read())
                 }
             } else {
                 DEFAULT_CONFIG
