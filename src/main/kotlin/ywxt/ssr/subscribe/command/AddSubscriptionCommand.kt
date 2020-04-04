@@ -15,7 +15,8 @@ import ywxt.ssr.subscribe.util.console.confirm
 import java.net.MalformedURLException
 import java.net.URL
 import ywxt.ssr.subscribe.util.console.eprintln
-import ywxt.ssr.subscribe.util.console.printGroup
+import ywxt.ssr.subscribe.util.console.printGroups
+import ywxt.ssr.subscribe.util.groups
 
 @CommandLine.Command(name = "add")
 class AddSubscriptionCommand : Runnable {
@@ -56,23 +57,9 @@ class AddSubscriptionCommand : Runnable {
             println("订阅地址：${url}")
             println("服务器：")
             // 按组分类
-            val prettyServers = urls
-                .groupBy { it.urlParams.group }
-                .asSequence()
-                .map { group ->
-                    val key = if (group.key.isBlank()) "未命名" else group.key
-                    val value = group.value
-                        .asSequence()
-                        .map { ssrUrl ->
-                            if (ssrUrl.urlParams.remarks.isBlank()) "${ssrUrl.urlBase.server}:${ssrUrl.urlBase.port}"
-                            else "${ssrUrl.urlParams.remarks} (${ssrUrl.urlBase.server}:${ssrUrl.urlBase.port})"
-                        }
-                    Pair(key, value)
-                }.associateBy({ it.first }, { it.second })
+            val prettyServers = urls.groups()
             // 打印订阅的服务器
-            prettyServers.forEach {
-                printGroup(it.key, it.value)
-            }
+            printGroups(prettyServers)
         }
     }
 }

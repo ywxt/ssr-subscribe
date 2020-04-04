@@ -2,7 +2,10 @@
 
 package ywxt.ssr.subscribe.util.console
 
+import ywxt.ssr.subscribe.ssr.SsrUrl
+import ywxt.ssr.subscribe.util.prettyName
 import java.util.*
+import kotlin.collections.HashMap
 
 private val input = Scanner(System.`in`)
 
@@ -21,10 +24,10 @@ fun eprintln(message: String) = println("错误：${message}".error())
 fun wprintln(message: String) = println("警告：${message}".warning())
 
 // ui
-fun printGroup(name: String, items: Iterable<String>) {
-    println("$name:")
-    for (it in items) {
-        println("    $it")
+fun printGroup(index: Int, name: String, items: Iterable<SsrUrl>) {
+    println("$index $name:")
+    for (it in items.withIndex()) {
+        println("    ${index}.${it.index} ${it.value.prettyName}")
     }
 }
 
@@ -34,23 +37,31 @@ fun printGroup(name: String, items: Iterable<String>) {
  *
  * [name]:
  *
- *   [items]
+ *     [items]
  *
- *   [items]
+ *     [items]
  */
-fun printGroup(name: String, items: Sequence<String>) {
-    println("$name:")
-    for (it in items) {
-        println("    $it")
+fun printGroup(index: Int, name: String, items: Sequence<SsrUrl>) {
+    println("$index $name:")
+    for (it in items.withIndex()) {
+        println("    ${index}-${it.index} ${it.value.prettyName}")
     }
 }
+
+
+fun printGroups(groups: Map<String, Iterable<SsrUrl>>) {
+    for (item in groups.entries.withIndex()) {
+        printGroup(item.index, item.value.key, item.value.value)
+    }
+}
+
 
 fun confirm(tip: String): Boolean {
     while (true) {
         print("$tip (Y/n):")
         val answer = input.next()[0]
-        if (answer=='Y' || answer=='y') return true
-        else if (answer=='N' || answer=='n') return false
+        if (answer == 'Y' || answer == 'y') return true
+        else if (answer == 'N' || answer == 'n') return false
         else eprintln("输入格式不正确：只能为Y、N、y或n")
     }
 }
