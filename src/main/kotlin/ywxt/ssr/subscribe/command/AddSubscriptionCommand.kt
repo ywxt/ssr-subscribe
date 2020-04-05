@@ -16,7 +16,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import ywxt.ssr.subscribe.util.console.eprintln
 import ywxt.ssr.subscribe.util.console.printGroups
-import ywxt.ssr.subscribe.util.groups
+import ywxt.ssr.subscribe.util.ssrurl.groups
 
 class AddSubscriptionCommand : CliktCommand(name = "add") {
     val url: String by argument()

@@ -3,15 +3,16 @@
 package ywxt.ssr.subscribe.util.console
 
 import ywxt.ssr.subscribe.ssr.SsrUrl
-import ywxt.ssr.subscribe.util.prettyName
+import ywxt.ssr.subscribe.util.ssrurl.prettyName
 import java.util.*
 import kotlin.collections.HashMap
 
 private val input = Scanner(System.`in`)
 
 // color
-inline fun <reified T> T.error(): String = "\u001b[31m${this.toString()}\u001b[0m"
-inline fun <reified T> T.warning(): String = "\u001b[33m${this.toString()}\u001b[0m"
+private inline fun <reified T> T.error(): String = "\u001b[31m${this.toString()}\u001b[0m"
+private inline fun <reified T> T.warning(): String = "\u001b[33m${this.toString()}\u001b[0m"
+private inline fun <reified T> T.success(): String = "\u001b[32m${this.toString()}\u001b[0m"
 
 /**
  * 输出错误
@@ -22,6 +23,8 @@ fun eprintln(message: String) = println("错误：${message}".error())
  * 输出警告
  */
 fun wprintln(message: String) = println("警告：${message}".warning())
+
+fun sprintln(message: String) = println("成功：${message}".success())
 
 // ui
 fun printGroup(index: Int, name: String, items: Iterable<SsrUrl>) {
