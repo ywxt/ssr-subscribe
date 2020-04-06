@@ -7,16 +7,16 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import ywxt.ssr.subscribe.async.http.AsyncClient
 import ywxt.ssr.subscribe.config.ConfigFile
+import ywxt.ssr.subscribe.config.DEFAULT_LOCAL_CONFIG
 import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.exception.ParseException
-import ywxt.ssr.subscribe.ssr.SsrUrl
+import ywxt.ssr.subscribe.util.config.groups
 import ywxt.ssr.subscribe.util.console.confirm
-import java.net.MalformedURLException
-import java.net.URL
 import ywxt.ssr.subscribe.util.console.eprintln
 import ywxt.ssr.subscribe.util.console.printGroups
-import ywxt.ssr.subscribe.util.ssrurl.groups
+import java.net.MalformedURLException
+import java.net.URL
 
 class AddSubscriptionCommand : CliktCommand(name = "add") {
     val url: String by argument()
@@ -28,7 +28,7 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
                 val ssrUrls = withTimeout(10000) {
                     AsyncClient().requestSsrUrls(httpUrl)
                 }
-                showDetail(url, ssrUrls)
+                showDetail(url, ssrUrls.map { ServerConfig.from(it, url, DEFAULT_LOCAL_CONFIG) })
                 val confirmed = confirm("是否添加到订阅？")
                 if (!confirmed) return@runBlocking
                 val config = ConfigFile.load()
@@ -50,14 +50,12 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
         }
     }
 
-    companion object {
-        private fun showDetail(url: String, urls: List<SsrUrl>) {
-            println("订阅地址：${url}")
-            println("服务器：")
-            // 按组分类
-            val prettyServers = urls.groups()
-            // 打印订阅的服务器
-            printGroups(prettyServers)
-        }
+    private fun showDetail(url: String, urls: Iterable<ServerConfig>) {
+        println("订阅地址：${url}")
+        println("服务器：")
+        // 按组分类
+        val prettyServers = urls.groups()
+        // 打印订阅的服务器
+        printGroups(prettyServers)
     }
 }

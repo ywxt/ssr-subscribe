@@ -1,5 +1,6 @@
 package ywxt.ssr.subscribe.ssr
 
+import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.exception.ParseException
 import ywxt.ssr.subscribe.util.base64.decodeBase64
 import ywxt.ssr.subscribe.util.base64.encodeBase64
@@ -70,7 +71,7 @@ object SsrUrlConvert : Convert<SsrUrl, String> {
                 urlBase = SsrUrlBaseConvert.from(couple[0]),
                 urlParams = SsrUrlParamsConvert.from(couple[1])
             )
-        }catch (e:ParseException){
+        } catch (e: ParseException) {
             throw ParseException("SSR地址有误:${value}")
         }
     }
@@ -78,5 +79,31 @@ object SsrUrlConvert : Convert<SsrUrl, String> {
     override fun to(type: SsrUrl): String = type.run {
         "ssr://${SsrUrlBaseConvert.to(urlBase)}/?${SsrUrlParamsConvert.to(urlParams)}"
     }
+
+}
+
+object ServerConfigConvert : Convert<ServerConfig, String> {
+    override fun from(value: String): ServerConfig {
+        TODO("Not implemented")
+    }
+
+    override fun to(type: ServerConfig): String = SsrUrlConvert.to(
+        SsrUrl(
+            SsrUrlBase(
+                server = type.server,
+                port = type.port,
+                protocol = type.protocol,
+                method = type.method,
+                obfs = type.obfs,
+                password = type.password
+            ),
+            SsrUrlParams(
+                obfsParam = type.obfsParam,
+                protoParam = type.protoParam,
+                remarks = type.remarks,
+                group = type.group
+            )
+        )
+    )
 
 }

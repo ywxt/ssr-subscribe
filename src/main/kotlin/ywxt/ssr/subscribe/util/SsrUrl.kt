@@ -4,7 +4,7 @@ package ywxt.ssr.subscribe.util.ssrurl
 
 import ywxt.ssr.subscribe.ssr.SsrUrl
 
-inline fun Iterable<SsrUrl>.groups(): Map<String, Iterable<SsrUrl>> = this.groupBy { it.urlParams.group }
+fun Iterable<SsrUrl>.groups(): Map<String, Iterable<SsrUrl>> = this.groupBy { it.urlParams.group }
     .asSequence()
     .map { group ->
         val key = if (group.key.isBlank()) "未命名" else group.key

@@ -2,10 +2,9 @@
 
 package ywxt.ssr.subscribe.util.console
 
-import ywxt.ssr.subscribe.ssr.SsrUrl
-import ywxt.ssr.subscribe.util.ssrurl.prettyName
+import ywxt.ssr.subscribe.config.ServerConfig
+import ywxt.ssr.subscribe.util.config.prettyName
 import java.util.*
-import kotlin.collections.HashMap
 
 private val input = Scanner(System.`in`)
 
@@ -24,10 +23,13 @@ fun eprintln(message: String) = println("错误：${message}".error())
  */
 fun wprintln(message: String) = println("警告：${message}".warning())
 
+/**
+ * 输出成功
+ */
 fun sprintln(message: String) = println("成功：${message}".success())
 
 // ui
-fun printGroup(index: Int, name: String, items: Iterable<SsrUrl>) {
+fun printGroup(index: Int, name: String, items: Iterable<ServerConfig>) {
     println("$index $name:")
     for (it in items.withIndex()) {
         println("    ${index}.${it.index} ${it.value.prettyName}")
@@ -44,7 +46,7 @@ fun printGroup(index: Int, name: String, items: Iterable<SsrUrl>) {
  *
  *     [items]
  */
-fun printGroup(index: Int, name: String, items: Sequence<SsrUrl>) {
+fun printGroup(index: Int, name: String, items: Sequence<ServerConfig>) {
     println("$index $name:")
     for (it in items.withIndex()) {
         println("    ${index}-${it.index} ${it.value.prettyName}")
@@ -52,7 +54,7 @@ fun printGroup(index: Int, name: String, items: Sequence<SsrUrl>) {
 }
 
 
-fun printGroups(groups: Map<String, Iterable<SsrUrl>>) {
+fun printGroups(groups: Map<String, Iterable<ServerConfig>>) {
     for (item in groups.entries.withIndex()) {
         printGroup(item.index, item.value.key, item.value.value)
     }

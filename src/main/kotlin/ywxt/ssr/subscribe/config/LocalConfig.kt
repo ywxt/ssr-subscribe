@@ -18,3 +18,4 @@ data class LocalConfig(
     @JsonProperty("redirect")
     val redirect: String? = null
 )
+val DEFAULT_LOCAL_CONFIG = LocalConfig()

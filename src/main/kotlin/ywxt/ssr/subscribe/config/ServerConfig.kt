@@ -2,7 +2,9 @@ package ywxt.ssr.subscribe.config
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonUnwrapped
+import ywxt.ssr.subscribe.ssr.ServerConfigConvert
 import ywxt.ssr.subscribe.ssr.SsrUrl
+import ywxt.ssr.subscribe.ssr.SsrUrlConvert
 
 data class ServerConfig(
     @JsonProperty("server")
@@ -47,4 +49,18 @@ data class ServerConfig(
             localConfig = localConfig
         )
     }
+
+    override fun toString(): String = """
+        SSR链接:${ServerConfigConvert.to(this)}
+        服务器IP:${server}
+        端口号:${port}
+        密码:${password}
+        协议:${protocol}
+        方式:${method}
+        obfs:${obfs}
+        协议参数:${obfsParam},
+        方法参数:${method},
+        remark:${remarks},
+        分组:${group}
+    """.trimIndent()
 }
