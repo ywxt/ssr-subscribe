@@ -1,6 +1,7 @@
 package ywxt.ssr.subscribe.ssr
 
 import ywxt.ssr.subscribe.config.ServerConfig
+import ywxt.ssr.subscribe.config.SsrServerConfig
 import ywxt.ssr.subscribe.exception.ParseException
 import ywxt.ssr.subscribe.util.base64.decodeBase64
 import ywxt.ssr.subscribe.util.base64.encodeBase64
@@ -105,5 +106,26 @@ object ServerConfigConvert : Convert<ServerConfig, String> {
             )
         )
     )
+
+}
+
+object SsrServerConfigConvert : Convert<SsrServerConfig, ServerConfig> {
+    override fun from(value: ServerConfig): SsrServerConfig = SsrServerConfig(
+        server = value.server,
+        port = value.port,
+        method = value.method,
+        protocol = value.protocol,
+        obfs = value.obfs,
+        password = value.password,
+        obfsParam = value.obfsParam,
+        protoParam = value.protoParam,
+        remarks = value.remarks,
+        group = value.group,
+        localConfig = value.localConfig
+    )
+
+    override fun to(type: SsrServerConfig): ServerConfig {
+        TODO("Not yet implemented")
+    }
 
 }
