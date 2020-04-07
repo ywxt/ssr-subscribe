@@ -8,12 +8,14 @@ import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.CompletionHandler
 import java.nio.charset.Charset
+import java.nio.file.OpenOption
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class AsyncFile(val path: String) : Closeable, AutoCloseable {
-    private val fileChannel = AsynchronousFileChannel.open(Path.of(path))
+    private val fileChannel = AsynchronousFileChannel.open(Path.of(path),StandardOpenOption.CREATE)
 
 
     suspend fun read(): ByteArray {

@@ -26,7 +26,7 @@ data class ConfigFile(
         suspend fun load(file: String = PATH + FILE_NAME): ConfigFile =
             if (File(file).exists()) {
                 AsyncFile(file).use {
-                    JSON_MAPPER.readValue(it.read())
+                    JSON_MAPPER.readValue<ConfigFile>(it.read())
                 }
             } else {
                 DEFAULT_CONFIG
