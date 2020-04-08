@@ -7,7 +7,7 @@ class AsyncFileTest{
     @Test
     fun readBytesTest() = runBlocking{
         writeBytesTest()
-        val bytes = AsyncFile("test.txt").use {
+        val bytes = AsyncFile("src/test/kotlin/test.txt").use {
             it.read()
         }
         Assert.assertNotNull(bytes)
@@ -18,23 +18,25 @@ class AsyncFileTest{
     @Test
     fun writeBytesTest() = runBlocking {
         val bytes = "Hello world".toByteArray()
-        AsyncFile("test.txt").use {
+        AsyncFile("src/test/kotlin/test.txt").use {
             it.write(bytes)
         }
     }
     @Test
     fun writeStringTest() = runBlocking {
-        val string = "Hello world"
-        AsyncFile("test.txt").use {
+        val string = """Hello worldHello worldHello worldHello worldHello worldHello worldHello
+| worldHello worldHello worldHello worldHello worldHello world""".trimMargin()
+        AsyncFile("src/test/kotlin/test.txt").use {
             it.writeString(string)
         }
     }
     @Test
     fun readStringTest()= runBlocking {
         writeStringTest()
-        val string = AsyncFile("text.txt").use {
+        val string = AsyncFile("src/test/kotlin/test.txt").use {
             it.readString()
         }
-        assert(string=="Hello world")
+        assert(string=="""Hello worldHello worldHello worldHello worldHello worldHello worldHello
+| worldHello worldHello worldHello worldHello worldHello world""".trimMargin())
     }
 }

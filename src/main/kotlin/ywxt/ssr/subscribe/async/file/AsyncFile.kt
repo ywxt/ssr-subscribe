@@ -15,7 +15,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class AsyncFile(val path: String) : Closeable, AutoCloseable {
-    private val fileChannel = AsynchronousFileChannel.open(Path.of(path),StandardOpenOption.CREATE)
+    private val fileChannel = AsynchronousFileChannel.open(
+        Path.of(path),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.WRITE,
+        StandardOpenOption.READ
+    )
 
 
     suspend fun read(): ByteArray {
@@ -40,16 +45,15 @@ class AsyncFile(val path: String) : Closeable, AutoCloseable {
         var position = 0
         var buffer: ByteBuffer
         do {
-            val writeLength = if ((data.size - position - 1) / 128 == 0) data.size - position - 1 else 128
+            val writeLength = if ((data.size - position) / 128 == 0) data.size - position else 128
             buffer = ByteBuffer.wrap(data, position, writeLength)
             fileChannel.asyncWrite(position.toLong(), buffer)
-            position+=writeLength
-
-        } while (position == data.size - 1)
+            position += writeLength
+        } while (position < data.size)
 
     }
 
-    suspend fun writeString(data:String) = write(data.toByteArray())
+    suspend fun writeString(data: String) = write(data.toByteArray())
 
     override fun close() {
         if (fileChannel.isOpen) {

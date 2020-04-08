@@ -63,7 +63,12 @@ object SsrUrlConvert : Convert<SsrUrl, String> {
         if (!value.startsWith("ssr://")) {
             throw ParseException("非SSR地址:${value}")
         }
-        val couple = value.substring(6).split("/?", limit = 2)
+        val ssrUrl = try {
+            if (value.contains("/?")) value.substring(6) else value.substring(6).decodeBase64()
+        } catch (_: Exception) {
+            throw ParseException("SSR地址有误:${value}")
+        }
+        val couple = ssrUrl.split("/?", limit = 2)
         if (couple.size != 2) {
             throw ParseException("SSR地址有误:${value}")
         }
