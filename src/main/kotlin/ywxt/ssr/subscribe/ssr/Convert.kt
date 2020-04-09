@@ -41,10 +41,10 @@ object SsrUrlParamsConvert : Convert<SsrUrlParams, String> {
             val kvs = value.split('&').asSequence()
                 .map { it.split('=') }.associateBy({ it[0] }, { it[1].decodeBase64() })
             return SsrUrlParams(
-                obfsParam = kvs.getValue("obfsparam").decodeBase64(),
-                protoParam = kvs.getValue("protoparam").decodeBase64(),
-                remarks = kvs.getValue("remarks").decodeBase64(),
-                group = kvs.getValue("group").decodeBase64()
+                obfsParam = kvs.getValue("obfsparam"),
+                protoParam = kvs.getValue("protoparam"),
+                remarks = kvs.getValue("remarks"),
+                group = kvs.getValue("group")
 
             )
         } catch (_: Exception) {
