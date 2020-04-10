@@ -4,6 +4,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.Closeable
+import java.io.File
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.CompletionHandler
@@ -14,12 +15,10 @@ import java.nio.file.StandardOpenOption
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class AsyncFile(val path: String) : Closeable, AutoCloseable {
+class AsyncFile(val path: String,vararg options:OpenOption) : Closeable, AutoCloseable {
     private val fileChannel = AsynchronousFileChannel.open(
         Path.of(path),
-        StandardOpenOption.CREATE,
-        StandardOpenOption.WRITE,
-        StandardOpenOption.READ
+        *options
     )
 
 
@@ -42,6 +41,9 @@ class AsyncFile(val path: String) : Closeable, AutoCloseable {
     suspend fun readString(): String = String(read(), Charset.forName("UTF-8"))
 
     suspend fun write(data: ByteArray) {
+        if (File(path).exists()){
+
+        }
         var position = 0
         var buffer: ByteBuffer
         do {

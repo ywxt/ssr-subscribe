@@ -17,7 +17,7 @@ import java.lang.Exception
 
 class SwitchServerCommand : CliktCommand(name = "switch") {
     val server: String by argument()
-    val path :String by option("--path","-p").default("./config.json")
+    val path :String by option("--path","-p").default("config.json")
     override fun run() = runBlocking {
         val config = ConfigFile.load()
         try {

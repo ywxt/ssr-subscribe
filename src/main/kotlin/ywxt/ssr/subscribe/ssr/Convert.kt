@@ -125,9 +125,8 @@ object SsrServerConfigConvert : Convert<SsrServerConfig, ServerConfig> {
         obfsParam = value.obfsParam,
         protoParam = value.protoParam,
         remarks = value.remarks,
-        group = value.group,
-        localConfig = value.localConfig
-    )
+        group = value.group
+    ).apply { this.localConfig = value.localConfig }
 
     override fun to(type: SsrServerConfig): ServerConfig {
         TODO("Not yet implemented")

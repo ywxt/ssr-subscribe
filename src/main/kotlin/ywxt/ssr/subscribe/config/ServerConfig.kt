@@ -28,11 +28,11 @@ data class ServerConfig(
     @JsonProperty("group")
     val group: String,
     @JsonProperty("source")
-    val source:String,
+    val source:String
+) {
     //local config
     @JsonUnwrapped
-    var localConfig: LocalConfig
-) {
+    var localConfig: LocalConfig = LocalConfig.DEFAULT_LOCAL_CONFIG.copy()
     companion object {
         fun from(ssrUrl: SsrUrl, source: String ,localConfig: LocalConfig): ServerConfig = ServerConfig(
             server = ssrUrl.urlBase.server,
@@ -45,22 +45,21 @@ data class ServerConfig(
             obfsParam = ssrUrl.urlParams.obfsParam,
             remarks = ssrUrl.urlParams.remarks,
             group = ssrUrl.urlParams.group,
-            source = source,
-            localConfig = localConfig
-        )
+            source = source
+        ).apply { this.localConfig = localConfig }
     }
 
     override fun toString(): String = """
-        SSR链接:${ServerConfigConvert.to(this)}
-        服务器IP:${server}
-        端口号:${port}
-        密码:${password}
-        协议:${protocol}
-        方式:${method}
-        obfs:${obfs}
-        协议参数:${obfsParam},
-        方法参数:${method},
-        remark:${remarks},
-        分组:${group}
+        |SSR链接:${ServerConfigConvert.to(this)}
+        |服务器IP:${server}
+        |端口号:${port}
+        |密码:${password}
+        |协议:${protocol}
+        |方式:${method}
+        |obfs:${obfs}
+        |协议参数:${obfsParam},
+        |方法参数:${method},
+        |remark:${remarks},
+        |分组:${group}
     """.trimIndent()
 }

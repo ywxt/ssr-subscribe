@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import ywxt.ssr.subscribe.async.http.AsyncClient
 import ywxt.ssr.subscribe.config.ConfigFile
-import ywxt.ssr.subscribe.config.DEFAULT_LOCAL_CONFIG
+import ywxt.ssr.subscribe.config.LocalConfig
 import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.exception.ParseException
@@ -28,7 +28,7 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
                 val ssrUrls = withTimeout(10000) {
                     AsyncClient().requestSsrUrls(httpUrl)
                 }
-                showDetail(url, ssrUrls.map { ServerConfig.from(it, url, DEFAULT_LOCAL_CONFIG) })
+                showDetail(url, ssrUrls.map { ServerConfig.from(it, url, LocalConfig.DEFAULT_LOCAL_CONFIG) })
                 val confirmed = confirm("是否添加到订阅？")
                 if (!confirmed) return@runBlocking
                 val config = ConfigFile.load()

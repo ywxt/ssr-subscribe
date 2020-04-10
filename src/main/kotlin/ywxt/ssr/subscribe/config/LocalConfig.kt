@@ -17,5 +17,9 @@ data class LocalConfig(
     val fastOpen: Boolean? = null,
     @JsonProperty("redirect")
     val redirect: String? = null
-)
-val DEFAULT_LOCAL_CONFIG = LocalConfig()
+){
+    companion object {
+        val DEFAULT_LOCAL_CONFIG = LocalConfig()
+    }
+}
+

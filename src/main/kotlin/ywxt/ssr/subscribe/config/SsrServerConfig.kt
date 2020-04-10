@@ -23,8 +23,9 @@ data class SsrServerConfig(
     @JsonProperty("remarks")
     val remarks: String,
     @JsonProperty("group")
-    val group: String,
+    val group: String
+){
     //local config
     @JsonUnwrapped
-    var localConfig: LocalConfig
-)
+    var localConfig: LocalConfig = LocalConfig.DEFAULT_LOCAL_CONFIG.copy()
+}

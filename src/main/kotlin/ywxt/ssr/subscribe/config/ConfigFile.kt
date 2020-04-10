@@ -5,6 +5,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import ywxt.ssr.subscribe.async.file.AsyncFile
 import ywxt.ssr.subscribe.json.JSON_MAPPER
 import java.io.File
+import java.lang.IllegalArgumentException
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 
 data class ConfigFile(
     @JsonProperty("defaultLocal")
@@ -16,16 +19,16 @@ data class ConfigFile(
 ) {
     companion object {
         const val FILE_NAME = "setting.json"
-        const val PATH = "~/.ssr-sub/"
+        val PATH = Paths.get(System.getProperty("user.home"), ".ssr-sub", FILE_NAME).toString()
         val DEFAULT_CONFIG = ConfigFile(
-            defaultLocalConfig = LocalConfig(),
+            defaultLocalConfig = LocalConfig.DEFAULT_LOCAL_CONFIG,
             servers = mutableListOf(),
             sources = mutableListOf()
         )
 
-        suspend fun load(file: String = PATH + FILE_NAME): ConfigFile =
-            if (File(file).exists()) {
-                AsyncFile(file).use {
+        suspend fun load(path: String = PATH): ConfigFile =
+            if (File(path).exists()) {
+                AsyncFile(path, StandardOpenOption.READ).use {
                     JSON_MAPPER.readValue<ConfigFile>(it.read())
                 }
             } else {
@@ -34,8 +37,13 @@ data class ConfigFile(
 
     }
 
-    suspend fun save(file: String = PATH + FILE_NAME) = AsyncFile(file).use {
-        it.write(JSON_MAPPER.writeValueAsBytes(this))
+    suspend fun save(path: String = PATH) {
+        val parent = File(path).parentFile ?: throw IllegalArgumentException("file 必须为有效的文件路径")
+        if (!parent.exists()) {
+            parent.mkdirs()
+        }
+        AsyncFile(path, StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE).use {
+            it.write(JSON_MAPPER.writeValueAsBytes(this))
+        }
     }
-
 }
