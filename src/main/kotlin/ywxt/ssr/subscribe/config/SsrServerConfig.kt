@@ -43,7 +43,10 @@ data class SsrServerConfig(
     }
 
     suspend fun save(path: String = DEFAULT_PATH) {
-        AsyncFile(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
+        AsyncFile(path,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE)
             .use {
                 val config = JSON_MAPPER.writeValueAsBytes(this)
                 it.write(config)

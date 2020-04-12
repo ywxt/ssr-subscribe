@@ -42,7 +42,12 @@ data class ConfigFile(
         if (!parent.exists()) {
             parent.mkdirs()
         }
-        AsyncFile(path, StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE).use {
+        AsyncFile(
+            path,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE)
+            .use {
             it.write(JSON_MAPPER.writeValueAsBytes(this))
         }
     }

@@ -41,9 +41,6 @@ class AsyncFile(val path: String,vararg options:OpenOption) : Closeable, AutoClo
     suspend fun readString(): String = String(read(), Charset.forName("UTF-8"))
 
     suspend fun write(data: ByteArray) {
-        if (File(path).exists()){
-
-        }
         var position = 0
         var buffer: ByteBuffer
         do {
