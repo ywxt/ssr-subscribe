@@ -9,16 +9,8 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Execute Gradle task
-        uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-14
-        with:
-          args: test
-        
+jobs: 
+  
   build:
     runs-on: ubuntu-latest
     steps:
