@@ -12,7 +12,7 @@ class AsyncFileTest {
         }
         assert(bytes.isNotEmpty()){"bytes is empty"}
         assert(String(bytes) == """Hello worldHello worldHello worldHello worldHello worldHello worldHello
-| worldHello worldHello worldHello worldHello worldHello world""") {"bytes error"}
+| worldHello worldHello worldHello worldHello worldHello world""") {"bytes error:${String(bytes)}"}
     }
 
     @Test
