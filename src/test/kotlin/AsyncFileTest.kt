@@ -7,7 +7,6 @@ import java.nio.file.StandardOpenOption
 class AsyncFileTest {
     @Test
     fun readBytesTest() = runBlocking {
-        writeBytesTest()
         val bytes = AsyncFile("src/test/kotlin/test.txt", StandardOpenOption.READ).use {
             it.read()
         }
@@ -45,7 +44,6 @@ class AsyncFileTest {
 
     @Test
     fun readStringTest() = runBlocking {
-        writeStringTest()
         val string = AsyncFile("src/test/kotlin/test.txt", StandardOpenOption.READ).use {
             it.readString()
         }

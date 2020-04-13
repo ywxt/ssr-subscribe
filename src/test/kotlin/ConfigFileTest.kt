@@ -9,8 +9,7 @@ import java.net.URL
 class ConfigFileTest {
     @Test
     fun loadTest() = runBlocking {
-        saveTest()
-        val config = ConfigFile.load()
+        val config = ConfigFile.load("/src/test/kotlin/setting.json")
         assert(config.sources.size == 1)
         assert(config.servers.isNotEmpty())
         assert(config.servers[0].localConfig.timeout == 3000)
@@ -26,7 +25,7 @@ class ConfigFileTest {
         config.servers.addAll(
             urls.asSequence()
                 .map { ServerConfig.from(it, source, LocalConfig.DEFAULT_LOCAL_CONFIG.copy(timeout = 3000)) })
-        config.save()
+        config.save("/src/test/kotlin/setting.json")
     }
 
 }
