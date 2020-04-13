@@ -11,7 +11,7 @@ on:
 
 jobs: 
   test:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: Set up JDK 14
