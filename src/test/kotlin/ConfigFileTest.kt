@@ -9,10 +9,10 @@ import java.net.URL
 class ConfigFileTest {
     @Test
     fun loadTest() = runBlocking {
-        val config = ConfigFile.load("/src/test/kotlin/setting.json")
-        assert(config.sources.size == 1)
-        assert(config.servers.isNotEmpty())
-        assert(config.servers[0].localConfig.timeout == 3000)
+        val config = ConfigFile.load("src/test/kotlin/setting.json")
+        assert(config.sources.size == 1){"source.size!=1"}
+        assert(config.servers.isNotEmpty()){"source.servers is empty"}
+        assert(config.servers[0].localConfig.timeout == 3000){"timeout != 3000"}
     }
 
     @Test
@@ -25,7 +25,7 @@ class ConfigFileTest {
         config.servers.addAll(
             urls.asSequence()
                 .map { ServerConfig.from(it, source, LocalConfig.DEFAULT_LOCAL_CONFIG.copy(timeout = 3000)) })
-        config.save("/src/test/kotlin/setting.json")
+        config.save("src/test/kotlin/setting.json")
     }
 
 }

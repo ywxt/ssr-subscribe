@@ -10,14 +10,15 @@ class AsyncFileTest {
         val bytes = AsyncFile("src/test/kotlin/test.txt", StandardOpenOption.READ).use {
             it.read()
         }
-        Assert.assertNotNull(bytes)
-        assert(bytes.isNotEmpty())
-        assert(String(bytes) == "Hello world")
+        assert(bytes.isNotEmpty()){"bytes is empty"}
+        assert(String(bytes) == """Hello worldHello worldHello worldHello worldHello worldHello worldHello
+| worldHello worldHello worldHello worldHello worldHello world""") {"bytes error"}
     }
 
     @Test
     fun writeBytesTest() = runBlocking {
-        val bytes = "Hello world".toByteArray()
+        val bytes = """Hello worldHello worldHello worldHello worldHello worldHello worldHello
+| worldHello worldHello worldHello worldHello worldHello world""".toByteArray()
         AsyncFile(
             "src/test/kotlin/test.txt",
             StandardOpenOption.WRITE,
