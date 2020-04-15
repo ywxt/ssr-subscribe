@@ -8,5 +8,6 @@ fun main(args: Array<String>) =
         AddSubscriptionCommand(),
         RemoveCommand(),
         ServerCommand(),
-        SwitchServerCommand()
+        SwitchServerCommand(),
+        ShowCommand()
     ).main(args)

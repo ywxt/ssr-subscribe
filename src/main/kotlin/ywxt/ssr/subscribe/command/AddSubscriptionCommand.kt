@@ -1,5 +1,6 @@
 package ywxt.ssr.subscribe.command
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import kotlinx.coroutines.TimeoutCancellationException
@@ -15,6 +16,8 @@ import ywxt.ssr.subscribe.util.config.groups
 import ywxt.ssr.subscribe.util.console.confirm
 import ywxt.ssr.subscribe.util.console.eprintln
 import ywxt.ssr.subscribe.util.console.printGroups
+import ywxt.ssr.subscribe.util.console.sprintln
+import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -37,16 +40,20 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
                 }
                 config.sources.add(url)
                 config.save()
-
+                sprintln("添加成功")
             }
-        } catch (e: MalformedURLException) {
+        } catch (_: MalformedURLException) {
             eprintln("URL不正确：${url}")
         } catch (e: ParseException) {
-            eprintln("解析错误：${e.message}")
+            eprintln("解析错误：${e.localizedMessage}")
         } catch (e: HttpException) {
-            eprintln("HTTP错误：${e.message}")
-        } catch (e: TimeoutCancellationException) {
+            eprintln("HTTP错误：${e.localizedMessage}")
+        } catch (_: TimeoutCancellationException) {
             eprintln("网络超时")
+        }catch (_:JsonProcessingException){
+            eprintln("文件格式不正确，请检查文件${ConfigFile.PATH}")
+        }catch (e:IOException){
+            eprintln("IO异常:${e.localizedMessage}")
         }
     }
 
