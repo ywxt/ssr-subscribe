@@ -1,4 +1,4 @@
-#SSR Subscribe
+# SSR Subscribe
 ![](https://github.com/ywxt/ssr-subscribe/workflows/CI%20with%20Gradle/badge.svg)
 
 ## 介绍
