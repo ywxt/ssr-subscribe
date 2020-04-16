@@ -1,38 +1,27 @@
 package ywxt.ssr.subscribe.command
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.coroutines.runBlocking
-import ywxt.ssr.subscribe.config.ConfigFile
 import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.util.config.groups
 import ywxt.ssr.subscribe.util.console.eprintln
+import ywxt.ssr.subscribe.util.config.handleLoadJsonConfigException
+import ywxt.ssr.subscribe.util.config.loadConfigFile
 import ywxt.ssr.subscribe.util.console.printGroups
-import java.io.IOException
 import java.lang.Exception
 
-class ServerCommand : CliktCommand(name = "server") {
-    val server: String? by argument()
-    val group: Boolean by option("--group", "-g").flag(default = false)
-    val file: String? by option("--file", "-f")
+class ServerCommand : CliktCommand(name = "server",help = "查看订阅服务器") {
+    val server: String? by argument(help = "服务器（组）序号")
+    val group: Boolean by option("--group", "-g",help = "查看组").flag(default = false)
+    val file: String? by option("--file", "-f",help = "配置文件位置")
     override fun run() = runBlocking {
         val config = try {
-            if (file.isNullOrBlank()) {
-                ConfigFile.load()
-            } else {
-                ConfigFile.load(file!!)
-            }
-        } catch (_: JsonProcessingException) {
-            eprintln("配置文件无法解析")
-            return@runBlocking
-        } catch (_: NoSuchFileException) {
-            eprintln("未找到配置文件")
-            return@runBlocking
-        } catch (e: IOException) {
-            eprintln("IO异常:${e.localizedMessage}")
+            loadConfigFile(file)
+        } catch (e: Exception) {
+            handleLoadJsonConfigException(e)
             return@runBlocking
         }
         if (server.isNullOrBlank()) {

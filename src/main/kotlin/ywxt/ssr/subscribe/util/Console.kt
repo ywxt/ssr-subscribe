@@ -32,7 +32,7 @@ fun sprintln(message: String) = println("成功：${message}".success())
 fun printGroup(index: Int, name: String, items: Iterable<ServerConfig>) {
     println("$index $name:")
     for (it in items.withIndex()) {
-        println("    ${index}.${it.index} ${it.value.prettyName}")
+        println("    ${index}-${it.index} ${it.value.prettyName}")
     }
 }
 
@@ -60,6 +60,11 @@ fun printGroups(groups: Map<String, Iterable<ServerConfig>>) {
     }
 }
 
+fun printSources(sources: Iterable<String>) {
+    for (source in sources.withIndex()) {
+        println("${source.index} ${source.value}")
+    }
+}
 
 fun confirm(tip: String): Boolean {
     while (true) {
@@ -70,3 +75,4 @@ fun confirm(tip: String): Boolean {
         else eprintln("输入格式不正确：只能为Y、N、y或n")
     }
 }
+

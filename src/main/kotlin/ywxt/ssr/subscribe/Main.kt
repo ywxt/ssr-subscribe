@@ -5,7 +5,8 @@ import ywxt.ssr.subscribe.command.*
 
 fun main(args: Array<String>) =
     MainCommand().subcommands(
-        AddSubscriptionCommand(),
+        AddSourceCommand(),
+        SourceCommand(),
         RemoveCommand(),
         ServerCommand(),
         SwitchServerCommand(),

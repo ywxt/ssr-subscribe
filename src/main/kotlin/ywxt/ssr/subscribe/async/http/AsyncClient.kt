@@ -29,7 +29,9 @@ class AsyncClient {
 
     suspend fun requestSsrUrls(url: URL): List<SsrUrl> {
         val bodyText = requestPlainText(url)
-        val ssrUrlsText = bodyText.decodeBase64(false).lineSequence()
+        val ssrUrlsText = bodyText.decodeBase64(false)
+            .lineSequence()
+            .filter { it.isNotBlank() }
         return ssrUrlsText.map { SsrUrlConvert.from(it) }.toList()
     }
 

@@ -13,17 +13,17 @@ data class ConfigFile(
     @JsonProperty("defaultLocal")
     val defaultLocalConfig: LocalConfig,
     @JsonProperty("servers")
-    val servers: MutableList<ServerConfig>,
+    val servers: MutableSet<ServerConfig>,
     @JsonProperty("sources")
-    val sources: MutableList<String>
+    val sources: MutableSet<String>
 ) {
     companion object {
         const val FILE_NAME = "setting.json"
         val PATH = Paths.get(System.getProperty("user.home"), ".ssr-sub", FILE_NAME).toString()
         val DEFAULT_CONFIG = ConfigFile(
             defaultLocalConfig = LocalConfig.DEFAULT_LOCAL_CONFIG,
-            servers = mutableListOf(),
-            sources = mutableListOf()
+            servers = mutableSetOf(),
+            sources = mutableSetOf()
         )
 
         suspend fun load(path: String = PATH): ConfigFile =

@@ -13,9 +13,9 @@ import ywxt.ssr.subscribe.util.console.wprintln
 import java.io.IOException
 
 
-class RemoveCommand : CliktCommand(name = "remove") {
+class RemoveCommand : CliktCommand(name = "remove",help = "移除订阅源") {
 
-    val sourceIndex: Int by argument().int()
+    val sourceIndex: Int by argument(help = "订阅源序号").int()
 
     override fun run() = runBlocking {
         try {
@@ -24,10 +24,10 @@ class RemoveCommand : CliktCommand(name = "remove") {
                 eprintln("输入的序号不正确:$sourceIndex")
                 return@runBlocking
             }
-            val source =  config.sources[sourceIndex]
+            val source =  config.sources.elementAt(sourceIndex)
             val confirmed = confirm("是否删除订阅源:$source")
             if (confirmed){
-                config.sources.removeAt(sourceIndex)
+                config.sources.remove(source)
                 config.servers.removeAll { it.source==source }
                 config.save()
                 sprintln("已删除订阅源:$source")

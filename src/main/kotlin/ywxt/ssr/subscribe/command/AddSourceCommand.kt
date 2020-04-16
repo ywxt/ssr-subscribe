@@ -1,28 +1,28 @@
 package ywxt.ssr.subscribe.command
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import ywxt.ssr.subscribe.async.http.AsyncClient
-import ywxt.ssr.subscribe.config.ConfigFile
 import ywxt.ssr.subscribe.config.LocalConfig
 import ywxt.ssr.subscribe.config.ServerConfig
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.exception.ParseException
 import ywxt.ssr.subscribe.util.config.groups
-import ywxt.ssr.subscribe.util.console.confirm
-import ywxt.ssr.subscribe.util.console.eprintln
-import ywxt.ssr.subscribe.util.console.printGroups
-import ywxt.ssr.subscribe.util.console.sprintln
+import ywxt.ssr.subscribe.util.config.handleLoadJsonConfigException
+import ywxt.ssr.subscribe.util.config.loadConfigFile
+import ywxt.ssr.subscribe.util.console.*
 import java.io.IOException
+import java.lang.Exception
 import java.net.MalformedURLException
 import java.net.URL
 
-class AddSubscriptionCommand : CliktCommand(name = "add") {
-    val url: String by argument()
+class AddSourceCommand : CliktCommand(name = "add",help = "添加订阅源") {
+    val url: String by argument(help = "订阅地址")
+    val file: String? by option("--file","-f",help = "配置文件地址")
     override fun run() {
         try {
             val httpUrl = URL(url)
@@ -34,7 +34,12 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
                 showDetail(url, ssrUrls.map { ServerConfig.from(it, url, LocalConfig.DEFAULT_LOCAL_CONFIG) })
                 val confirmed = confirm("是否添加到订阅？")
                 if (!confirmed) return@runBlocking
-                val config = ConfigFile.load()
+                val config = try {
+                    loadConfigFile(file)
+                }catch (e:Exception){
+                    handleLoadJsonConfigException(e)
+                    return@runBlocking
+                }
                 ssrUrls.forEach {
                     config.servers.add(ServerConfig.from(it, url, config.defaultLocalConfig))
                 }
@@ -50,8 +55,6 @@ class AddSubscriptionCommand : CliktCommand(name = "add") {
             eprintln("HTTP错误：${e.localizedMessage}")
         } catch (_: TimeoutCancellationException) {
             eprintln("网络超时")
-        }catch (_:JsonProcessingException){
-            eprintln("文件格式不正确，请检查文件${ConfigFile.PATH}")
         }catch (e:IOException){
             eprintln("IO异常:${e.localizedMessage}")
         }

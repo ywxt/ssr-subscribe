@@ -1,23 +1,22 @@
 package ywxt.ssr.subscribe.command
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.coroutines.runBlocking
 import ywxt.ssr.subscribe.util.config.handleLoadJsonConfigException
 import ywxt.ssr.subscribe.util.config.loadConfigFile
+import ywxt.ssr.subscribe.util.console.printSources
 import java.lang.Exception
 
-class ShowCommand : CliktCommand(name = "show", help = "查看默认服务器详细信息") {
-    val path: String? by argument()
+class SourceCommand:CliktCommand(name = "source",help = "查看订阅源") {
+    val file:String? by option("--file","-f",help = "配置文件地址")
     override fun run() = runBlocking {
         val config = try {
-            loadConfigFile(path)
-        } catch (e: Exception) {
+            loadConfigFile(file)
+        }catch (e:Exception){
             handleLoadJsonConfigException(e)
             return@runBlocking
         }
-        println(config.toString())
-
+        printSources(config.sources)
     }
-
 }
