@@ -12,7 +12,7 @@ class ConfigFileTest {
         val config = ConfigFile.load("src/test/kotlin/setting.json")
         assert(config.sources.size == 1){"source.size!=1"}
         assert(config.servers.isNotEmpty()){"source.servers is empty"}
-        assert(config.servers[0].localConfig.timeout == 3000){"timeout != 3000"}
+        assert(config.servers.elementAt(0).localConfig.timeout == 3000){"timeout != 3000"}
     }
 
     @Test
