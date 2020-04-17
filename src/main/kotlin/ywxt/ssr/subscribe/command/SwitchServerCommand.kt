@@ -11,6 +11,8 @@ import ywxt.ssr.subscribe.config.ConfigFile
 import ywxt.ssr.subscribe.json.JSON_MAPPER
 import ywxt.ssr.subscribe.ssr.SsrServerConfigConvert
 import ywxt.ssr.subscribe.util.config.groups
+import ywxt.ssr.subscribe.util.config.handleLoadJsonConfigException
+import ywxt.ssr.subscribe.util.config.loadConfigFile
 import ywxt.ssr.subscribe.util.console.eprintln
 import java.io.IOException
 import java.lang.Exception
@@ -19,8 +21,14 @@ import java.lang.Exception
 class SwitchServerCommand : CliktCommand(name = "switch", help = "切换默认服务器") {
     val server: String by argument(help = "服务器序号")
     val path: String by option("--path", "-p",help = "SSR配置文件路径").default("config.json")
+    val file:String? by option("--path","-p",help = "配置文件位置")
     override fun run() = runBlocking {
-        val config = ConfigFile.load()
+        val config = try {
+            loadConfigFile(file)
+        }catch (e:Exception){
+            handleLoadJsonConfigException(e)
+            return@runBlocking
+        }
         try {
             val indexes = server.split('-').map { it.toInt() }
             val serverConfig = config.servers
