@@ -1,6 +1,8 @@
 package ywxt.ssr.subscribe.async.http
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import ywxt.ssr.subscribe.exception.HttpException
 import ywxt.ssr.subscribe.ssr.SsrUrl
@@ -18,13 +20,13 @@ class AsyncClient {
             .build()
     }
 
-    suspend fun requestPlainText(url: URL): String {
+    suspend fun requestPlainText(url: URL): String = withContext(Dispatchers.IO) {
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
         val body = httpClient.callAsync(request).body
-        return body.use { it?.string() } ?: throw HttpException("目标页面无法转换为文本")
+        body.use { it?.string() } ?: throw HttpException("目标页面无法转换为文本")
     }
 
     suspend fun requestSsrUrls(url: URL): List<SsrUrl> {

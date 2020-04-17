@@ -22,8 +22,8 @@ data class ConfigFile(
         val PATH = Paths.get(System.getProperty("user.home"), ".ssr-sub", FILE_NAME).toString()
         val DEFAULT_CONFIG = ConfigFile(
             defaultLocalConfig = LocalConfig.DEFAULT_LOCAL_CONFIG,
-            servers = mutableSetOf(),
-            sources = mutableSetOf()
+            servers = linkedSetOf(),
+            sources = linkedSetOf()
         )
 
         suspend fun load(path: String = PATH): ConfigFile =

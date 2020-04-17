@@ -8,6 +8,7 @@ fun main(args: Array<String>) =
         AddSourceCommand(),
         SourceCommand(),
         RemoveCommand(),
+        UpdateCommand(),
         ServerCommand(),
         SwitchServerCommand(),
         ShowCommand()

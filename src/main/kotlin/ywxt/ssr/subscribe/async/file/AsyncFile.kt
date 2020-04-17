@@ -1,6 +1,8 @@
 package ywxt.ssr.subscribe.async.file
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.Closeable
@@ -15,14 +17,14 @@ import java.nio.file.StandardOpenOption
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class AsyncFile(val path: String,vararg options:OpenOption) : Closeable, AutoCloseable {
+class AsyncFile(val path: String, vararg options: OpenOption) : Closeable, AutoCloseable {
     private val fileChannel = AsynchronousFileChannel.open(
         Path.of(path),
         *options
     )
 
 
-    suspend fun read(): ByteArray {
+    suspend fun read(): ByteArray = withContext(Dispatchers.IO) {
         val buffer: ByteBuffer = ByteBuffer.allocate(128)
         val bf = ByteArrayOutputStream(fileChannel.size().toInt())
         var position = 0L
@@ -35,12 +37,12 @@ class AsyncFile(val path: String,vararg options:OpenOption) : Closeable, AutoClo
             }
             position += length
         } while (length != -1)
-        return bf.toByteArray()
+        bf.toByteArray()
     }
 
     suspend fun readString(): String = String(read(), Charset.forName("UTF-8"))
 
-    suspend fun write(data: ByteArray) {
+    suspend fun write(data: ByteArray) = withContext(Dispatchers.IO) {
         var position = 0
         var buffer: ByteBuffer
         do {
