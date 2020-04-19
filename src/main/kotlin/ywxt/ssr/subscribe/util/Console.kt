@@ -36,23 +36,6 @@ fun printGroup(index: Int, name: String, items: Iterable<ServerConfig>) {
     }
 }
 
-/**
- * 打印一组
- * 例：
- *
- * [name]:
- *
- *     [items]
- *
- *     [items]
- */
-fun printGroup(index: Int, name: String, items: Sequence<ServerConfig>) {
-    println("$index $name:")
-    for (it in items.withIndex()) {
-        println("    ${index}-${it.index} ${it.value.prettyName}")
-    }
-}
-
 
 fun printGroups(groups: Map<String, Iterable<ServerConfig>>) {
     for (item in groups.entries.withIndex()) {

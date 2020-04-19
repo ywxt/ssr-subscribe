@@ -21,7 +21,7 @@ import java.lang.Exception
 class SwitchServerCommand : CliktCommand(name = "switch", help = "切换默认服务器") {
     val server: String by argument(help = "服务器序号")
     val path: String by option("--path", "-p",help = "SSR配置文件路径").default("config.json")
-    val file:String? by option("--path","-p",help = "配置文件位置")
+    val file:String? by option("--file","-f",help = "配置文件位置")
     override fun run() = runBlocking {
         val config = try {
             loadConfigFile(file)
@@ -35,8 +35,7 @@ class SwitchServerCommand : CliktCommand(name = "switch", help = "切换默认�
                 .groups()
                 .entries
                 .elementAt(indexes[0])
-                .value
-                .elementAt(indexes[1])
+                .value[indexes[1]]
             val ssrServerConfig = JSON_MAPPER
                 .writeValueAsBytes(SsrServerConfigConvert.from(serverConfig))
             AsyncFile(path).use { it.write(ssrServerConfig) }

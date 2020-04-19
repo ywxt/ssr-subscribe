@@ -33,10 +33,11 @@ class UpdateCommand : CliktCommand(name = "update", help = "更新订阅源") {
         }
         val sources = if (sourceIndexs.isEmpty()) config.sources else {
             try {
+                val tmpSources = config.sources.toList()
                 sourceIndexs.asSequence()
                     .filter { it.isNotBlank() }
-                    .map { config.sources.elementAt(it.toInt()) }
-                    .toList()
+                    .map { tmpSources[it.toInt()] }
+                    .asIterable()
             } catch (e: NumberFormatException) {
                 eprintln("输入源序号不正确")
                 return@runBlocking
@@ -68,8 +69,9 @@ class UpdateCommand : CliktCommand(name = "update", help = "更新订阅源") {
     }
 
 
-    private suspend fun updateConfig(config: ConfigFile, sources: Collection<String>) = coroutineScope {
-        config.servers.removeIf { it.source in sources }
+    private suspend fun updateConfig(config: ConfigFile, sources: Iterable<String>) = coroutineScope {
+        val tmpSources = sources.toHashSet()
+        config.servers.removeIf { it.source in tmpSources }
         val servers = sources
             .map { async { Pair(it, update(it)) } }
             .awaitAll() //async封装，awaitAll并发请求

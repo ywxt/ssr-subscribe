@@ -11,7 +11,7 @@ import java.io.IOException
 import java.lang.Exception
 
 
-fun Iterable<ServerConfig>.groups(): Map<String, Iterable<ServerConfig>> = this.groupBy { it.group }
+fun Iterable<ServerConfig>.groups(): Map<String, List<ServerConfig>> = this.groupBy { it.group }
     .asSequence()
     .map { group ->
         val key = if (group.key.isBlank()) "未命名" else group.key

@@ -20,33 +20,31 @@ import java.lang.Exception
 import java.net.MalformedURLException
 import java.net.URL
 
-class AddSourceCommand : CliktCommand(name = "add",help = "添加订阅源") {
+class AddSourceCommand : CliktCommand(name = "add", help = "添加订阅源") {
     val url: String by argument(help = "订阅地址")
-    val file: String? by option("--file","-f",help = "配置文件地址")
-    override fun run() {
-        try {
+    val file: String? by option("--file", "-f", help = "配置文件地址")
+    override fun run() = runBlocking {
+        try {//10s 超时
             val httpUrl = URL(url)
-            runBlocking {
-                //10s 超时
-                val ssrUrls = withTimeout(10000) {
-                    AsyncClient().requestSsrUrls(httpUrl)
-                }
-                showDetail(url, ssrUrls.map { ServerConfig.from(it, url, LocalConfig.DEFAULT_LOCAL_CONFIG) })
-                val confirmed = confirm("是否添加到订阅？")
-                if (!confirmed) return@runBlocking
-                val config = try {
-                    loadConfigFile(file)
-                }catch (e:Exception){
-                    handleLoadJsonConfigException(e)
-                    return@runBlocking
-                }
-                ssrUrls.forEach {
-                    config.servers.add(ServerConfig.from(it, url, config.defaultLocalConfig))
-                }
-                config.sources.add(url)
-                config.save()
-                sprintln("添加成功")
+            val ssrUrls = withTimeout(10000) {
+                AsyncClient().requestSsrUrls(httpUrl)
             }
+            showDetail(url, ssrUrls.map { ServerConfig.from(it, url, LocalConfig.DEFAULT_LOCAL_CONFIG) })
+            val confirmed = confirm("是否添加到订阅？")
+            if (!confirmed) return@runBlocking
+            val config = try {
+                loadConfigFile(file)
+            } catch (e: Exception) {
+                handleLoadJsonConfigException(e)
+                return@runBlocking
+            }
+            ssrUrls.forEach {
+                config.servers.add(ServerConfig.from(it, url, config.defaultLocalConfig))
+            }
+            config.sources.add(url)
+            config.save()
+            sprintln("添加成功")
+
         } catch (_: MalformedURLException) {
             eprintln("URL不正确：${url}")
         } catch (e: ParseException) {
@@ -55,7 +53,7 @@ class AddSourceCommand : CliktCommand(name = "add",help = "添加订阅源") {
             eprintln("HTTP错误：${e.localizedMessage}")
         } catch (_: TimeoutCancellationException) {
             eprintln("网络超时")
-        }catch (e:IOException){
+        } catch (e: IOException) {
             eprintln("IO异常:${e.localizedMessage}")
         }
     }

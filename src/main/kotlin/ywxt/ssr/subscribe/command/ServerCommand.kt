@@ -28,15 +28,14 @@ class ServerCommand : CliktCommand(name = "server",help = "查看订阅服务器
             printServers(config.servers)
             return@runBlocking
         }
+        val groups = config.servers
+            .groups()
+            .entries
+            .toList()
         if (!group) {
             try {
                 val indexes = server!!.split('-').map { it.toInt() }
-                val serverConfig = config.servers
-                    .groups()
-                    .entries
-                    .elementAt(indexes[0])
-                    .value
-                    .elementAt(indexes[1])
+                val serverConfig = groups[indexes[0]].value[indexes[1]]
                 printServer(serverConfig)
             } catch (_: Exception) {
                 eprintln("输入序号不正确")
@@ -45,12 +44,8 @@ class ServerCommand : CliktCommand(name = "server",help = "查看订阅服务器
             }
         }
         try {
-            val indexes = server!!.toInt()
-            val serverConfigs = config.servers
-                .groups()
-                .entries
-                .elementAt(indexes)
-                .value
+            val index = server!!.toInt()
+            val serverConfigs = groups[index].value
             printServers(serverConfigs)
         } catch (_: Exception) {
             eprintln("输入序号不正确")
